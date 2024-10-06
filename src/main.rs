@@ -1,11 +1,9 @@
-fn main() {
+#[macro_use] extern crate rocket;
 
-    let result: Vec<i64> = prime_factors(13195);
-    println!("Result {:?}", result);
-
-    let result: Vec<i64> = prime_factors(600851475143);
-    println!("Result {:?}", result);
-
+#[get("/calculate_prime_factors/<number>")]
+fn process(number: i64) -> String {
+    let result: Vec<i64> = prime_factors(number);
+    return format!("Result {:?}", result);
 }
 
 fn prime_factors(mut number: i64) -> Vec<i64> {
@@ -30,4 +28,9 @@ fn prime_factors(mut number: i64) -> Vec<i64> {
     }
 
     return factors;
+}
+
+#[launch]
+fn rocket() -> _ {
+    rocket::build().mount("/", routes![process])
 }
